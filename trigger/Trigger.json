@@ -1,0 +1,25 @@
+{
+	"name": "Trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ELTPipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 40,
+				"startTime": "2024-05-16T14:00:00",
+				"endTime": "2024-05-17T23:00:00",
+				"timeZone": "FLE Standard Time"
+			}
+		}
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"name": "ADFeltpipeline",
+	"location": "germanywestcentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "379565d1-46f7-4eba-a68f-a5378b5ad585",
+		"tenantId": "fbd2f045-b34c-4673-9534-8f2374355cec"
+	}
+}
