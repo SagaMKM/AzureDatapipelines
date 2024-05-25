@@ -126,6 +126,276 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/GetDataLakeData')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorageforELT",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "kunnat2022cvs.txt",
+						"fileSystem": "staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Ammattinimike",
+						"type": "String"
+					},
+					{
+						"name": "Sukupuoli",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kuukausipalkkaiset yhteens�",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokoaikaisten lukum��r�",
+						"type": "String"
+					},
+					{
+						"name": "2022 Osa-aikaisten lukum��r�",
+						"type": "String"
+					},
+					{
+						"name": "2022 Peruspalkan keskiarvo",
+						"type": "String"
+					},
+					{
+						"name": " e/kk6",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion keskiarvo",
+						"type": "String"
+					},
+					{
+						"name": " e/kk8",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion 1.desiili",
+						"type": "String"
+					},
+					{
+						"name": " e/kk10",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion mediaani",
+						"type": "String"
+					},
+					{
+						"name": " e/kk12",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion 9.desiili",
+						"type": "String"
+					},
+					{
+						"name": " e/kk14",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion variaatiokerroin",
+						"type": "String"
+					},
+					{
+						"name": " %16",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion keskiarvo",
+						"type": "String"
+					},
+					{
+						"name": " e/kk18",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion 1.desiili",
+						"type": "String"
+					},
+					{
+						"name": " e/kk20",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion mediaani",
+						"type": "String"
+					},
+					{
+						"name": " e/kk22",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion 9.desiili",
+						"type": "String"
+					},
+					{
+						"name": " e/kk24",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion variaatiokerroin",
+						"type": "String"
+					},
+					{
+						"name": " %26",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorageforELT')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/GetDataLakeDataValtio')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorageforELT",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "valtio2022cvs.csv",
+						"fileSystem": "staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Vuosi",
+						"type": "String"
+					},
+					{
+						"name": "Ammattinimike",
+						"type": "String"
+					},
+					{
+						"name": "Sukupuoli",
+						"type": "String"
+					},
+					{
+						"name": "Palkansaajat yhteens�",
+						"type": "String"
+					},
+					{
+						"name": "Kokoaikaisten lukum��r�",
+						"type": "String"
+					},
+					{
+						"name": "Osa-aikaisten lukum��r�",
+						"type": "String"
+					},
+					{
+						"name": "S��nn�llisen ty�ajan ansion keskiarvo",
+						"type": "String"
+					},
+					{
+						"name": " e/kk7",
+						"type": "String"
+					},
+					{
+						"name": "S��nn�llisen ty�ajan ansion 1.desiili",
+						"type": "String"
+					},
+					{
+						"name": " e/kk9",
+						"type": "String"
+					},
+					{
+						"name": "S��nn�llisen ty�ajan ansion mediaani",
+						"type": "String"
+					},
+					{
+						"name": " e/kk11",
+						"type": "String"
+					},
+					{
+						"name": "S��nn�llisen ty�ajan ansion 9.desiili",
+						"type": "String"
+					},
+					{
+						"name": " e/kk13",
+						"type": "String"
+					},
+					{
+						"name": "S��nn�llisen ty�ajan ansion variaatiokerroin",
+						"type": "String"
+					},
+					{
+						"name": " %15",
+						"type": "String"
+					},
+					{
+						"name": "Kokonaisansion keskiarvo",
+						"type": "String"
+					},
+					{
+						"name": " e/kk17",
+						"type": "String"
+					},
+					{
+						"name": "Kokonaisansion 1.desiili",
+						"type": "String"
+					},
+					{
+						"name": " e/kk19",
+						"type": "String"
+					},
+					{
+						"name": "Kokonaisansion mediaani",
+						"type": "String"
+					},
+					{
+						"name": " e/kk21",
+						"type": "String"
+					},
+					{
+						"name": "Kokonaisansion 9.desiili",
+						"type": "String"
+					},
+					{
+						"name": " e/kk23",
+						"type": "String"
+					},
+					{
+						"name": "Kokonaisansion variaatiokerroin",
+						"type": "String"
+					},
+					{
+						"name": " %25",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorageforELT')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SourceKuntaCSV')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -348,14 +618,14 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "DataLakeKunta",
+								"referenceName": "GetDataLakeData",
 								"type": "DatasetReference"
 							},
 							"name": "DataLakeKunnat"
 						},
 						{
 							"dataset": {
-								"referenceName": "DataLakeValtio",
+								"referenceName": "GetDataLakeDataValtio",
 								"type": "DatasetReference"
 							},
 							"name": "DataLakeValtio"
@@ -376,10 +646,67 @@
 						}
 					],
 					"scriptLines": [
-						"source(allowSchemaDrift: true,",
+						"source(output(",
+						"          Ammattinimike as string,",
+						"          Sukupuoli as string,",
+						"          {2022 Kuukausipalkkaiset yhteens�} as string,",
+						"          {2022 Kokoaikaisten lukum��r�} as string,",
+						"          {2022 Osa-aikaisten lukum��r�} as string,",
+						"          {2022 Peruspalkan keskiarvo} as string,",
+						"          { e/kk6} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion keskiarvo} as string,",
+						"          { e/kk8} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion 1.desiili} as string,",
+						"          { e/kk10} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion mediaani} as string,",
+						"          { e/kk12} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion 9.desiili} as string,",
+						"          { e/kk14} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion variaatiokerroin} as string,",
+						"          { %16} as string,",
+						"          {2022 Kokonaisansion keskiarvo} as string,",
+						"          { e/kk18} as string,",
+						"          {2022 Kokonaisansion 1.desiili} as string,",
+						"          { e/kk20} as string,",
+						"          {2022 Kokonaisansion mediaani} as string,",
+						"          { e/kk22} as string,",
+						"          {2022 Kokonaisansion 9.desiili} as string,",
+						"          { e/kk24} as string,",
+						"          {2022 Kokonaisansion variaatiokerroin} as string,",
+						"          { %26} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> DataLakeKunnat",
-						"source(allowSchemaDrift: true,",
+						"source(output(",
+						"          Vuosi as string,",
+						"          Ammattinimike as string,",
+						"          Sukupuoli as string,",
+						"          {Palkansaajat yhteens�} as string,",
+						"          {Kokoaikaisten lukum��r�} as string,",
+						"          {Osa-aikaisten lukum��r�} as string,",
+						"          {S��nn�llisen ty�ajan ansion keskiarvo} as string,",
+						"          { e/kk7} as string,",
+						"          {S��nn�llisen ty�ajan ansion 1.desiili} as string,",
+						"          { e/kk9} as string,",
+						"          {S��nn�llisen ty�ajan ansion mediaani} as string,",
+						"          { e/kk11} as string,",
+						"          {S��nn�llisen ty�ajan ansion 9.desiili} as string,",
+						"          { e/kk13} as string,",
+						"          {S��nn�llisen ty�ajan ansion variaatiokerroin} as string,",
+						"          { %15} as string,",
+						"          {Kokonaisansion keskiarvo} as string,",
+						"          { e/kk17} as string,",
+						"          {Kokonaisansion 1.desiili} as string,",
+						"          { e/kk19} as string,",
+						"          {Kokonaisansion mediaani} as string,",
+						"          { e/kk21} as string,",
+						"          {Kokonaisansion 9.desiili} as string,",
+						"          { e/kk23} as string,",
+						"          {Kokonaisansion variaatiokerroin} as string,",
+						"          { %25} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> DataLakeValtio",
 						"DataLakeKunnat, DataLakeValtio union(byName: true)~> union1",
@@ -394,8 +721,8 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DataLakeKunta')]",
-				"[concat(variables('factoryId'), '/datasets/DataLakeValtio')]",
+				"[concat(variables('factoryId'), '/datasets/GetDataLakeData')]",
+				"[concat(variables('factoryId'), '/datasets/GetDataLakeDataValtio')]",
 				"[concat(variables('factoryId'), '/datasets/TransformedData')]"
 			]
 		},
@@ -411,13 +738,7 @@
 						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
-								"activity": "Valtio",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Kunta",
+								"activity": "Wait",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -736,7 +1057,7 @@
 								"formatSettings": {
 									"type": "DelimitedTextWriteSettings",
 									"quoteAllText": true,
-									"fileExtension": ".txt"
+									"fileExtension": ".csv"
 								}
 							},
 							"enableStaging": false,
@@ -957,6 +1278,28 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "Wait",
+						"type": "Wait",
+						"dependsOn": [
+							{
+								"activity": "Valtio",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Kunta",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 120
+						}
 					}
 				],
 				"policy": {
