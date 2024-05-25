@@ -1,0 +1,27 @@
+{
+	"name": "Dataflow_Trigger",
+	"properties": {
+		"annotations": [
+			"Dataflow Started"
+		],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ETL_pipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 5,
+				"startTime": "2024-05-25T21:06:00",
+				"endTime": "2024-05-26T00:28:00",
+				"timeZone": "FLE Standard Time"
+			}
+		}
+	}
+}

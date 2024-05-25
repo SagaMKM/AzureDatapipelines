@@ -1,0 +1,147 @@
+{
+	"name": "TransformationFlow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CopyKunta",
+						"type": "DatasetReference"
+					},
+					"name": "Kunta"
+				},
+				{
+					"dataset": {
+						"referenceName": "CopyValtio",
+						"type": "DatasetReference"
+					},
+					"name": "Valtio"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "TransformedDataset",
+						"type": "DatasetReference"
+					},
+					"name": "ExportData"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "MapByFilteringColumns"
+				},
+				{
+					"name": "union1"
+				},
+				{
+					"name": "SortByAmmattinimike"
+				},
+				{
+					"name": "MapAllColumns"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Ammattinimike as string,",
+				"          Sukupuoli as string,",
+				"          {2022 Kuukausipalkkaiset yhteens�} as string,",
+				"          {2022 Kokoaikaisten lukum��r�} as string,",
+				"          {2022 Osa-aikaisten lukum��r�} as string,",
+				"          {2022 Peruspalkan keskiarvo, e/kk} as string,",
+				"          {2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk} as string,",
+				"          {2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk} as string,",
+				"          {2022 S��nn�llisen ty�ajan ansion mediaani, e/kk} as string,",
+				"          {2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk} as string,",
+				"          {2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %} as string,",
+				"          {2022 Kokonaisansion keskiarvo, e/kk} as string,",
+				"          {2022 Kokonaisansion 1.desiili, e/kk} as string,",
+				"          {2022 Kokonaisansion mediaani, e/kk} as string,",
+				"          {2022 Kokonaisansion 9.desiili, e/kk} as string,",
+				"          {2022 Kokonaisansion variaatiokerroin, %} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Kunta",
+				"source(output(",
+				"          Vuosi as string,",
+				"          Ammattinimike as string,",
+				"          Sukupuoli as string,",
+				"          {Palkansaajat yhteens�} as string,",
+				"          {Kokoaikaisten lukum��r�} as string,",
+				"          {Osa-aikaisten lukum��r�} as string,",
+				"          {S��nn�llisen ty�ajan ansion keskiarvo, e/kk} as string,",
+				"          {S��nn�llisen ty�ajan ansion 1.desiili, e/kk} as string,",
+				"          {S��nn�llisen ty�ajan ansion mediaani, e/kk} as string,",
+				"          {S��nn�llisen ty�ajan ansion 9.desiili, e/kk} as string,",
+				"          {S��nn�llisen ty�ajan ansion variaatiokerroin, %} as string,",
+				"          {Kokonaisansion keskiarvo, e/kk} as string,",
+				"          {Kokonaisansion 1.desiili, e/kk} as string,",
+				"          {Kokonaisansion mediaani, e/kk} as string,",
+				"          {Kokonaisansion 9.desiili, e/kk} as string,",
+				"          {Kokonaisansion variaatiokerroin, %} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Valtio",
+				"MapByFilteringColumns derive(Sukupuoli = iif(Sukupuoli == 'yhteensä', 'miehet ja naiset', Sukupuoli)) ~> derivedColumn1",
+				"SortByAmmattinimike select(mapColumn(",
+				"          Vuosi,",
+				"          Ammattinimike,",
+				"          Sukupuoli,",
+				"          Kokoaikaiset,",
+				"          {Osa-aikaiset},",
+				"          {Kokonaisansion keskiarvo, e/kk},",
+				"          {Kokonaisansion mediaani, e/kk}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> MapByFilteringColumns",
+				"Valtio, Kunta union(byName: true)~> union1",
+				"MapAllColumns sort(asc(Ammattinimike, true)) ~> SortByAmmattinimike",
+				"union1 select(mapColumn(",
+				"          Vuosi,",
+				"          Ammattinimike,",
+				"          Sukupuoli,",
+				"          Kokoaikaiset = {Kokoaikaisten lukum��r�},",
+				"          {Osa-aikaiset} = {Osa-aikaisten lukum��r�},",
+				"          {S_Ansion keskiarvo, e/kk} = {S��nn�llisen ty�ajan ansion keskiarvo, e/kk},",
+				"          {S_1desiili, e/kk} = {S��nn�llisen ty�ajan ansion 1.desiili, e/kk},",
+				"          {S_Ansion mediaani, e/kk} = {S��nn�llisen ty�ajan ansion mediaani, e/kk},",
+				"          {S_9desiili, e/kk} = {S��nn�llisen ty�ajan ansion 9.desiili, e/kk},",
+				"          {S_Ansion variaatiokerroin, %} = {S��nn�llisen ty�ajan ansion variaatiokerroin, %},",
+				"          {Kokonaisansion keskiarvo, e/kk},",
+				"          {Koko1desiili, e/kk} = {Kokonaisansion 1.desiili, e/kk},",
+				"          {Kokonaisansion mediaani, e/kk},",
+				"          {Koko9desiili, e/kk} = {Kokonaisansion 9.desiili, e/kk},",
+				"          {Kokonaisansion variaatiokerroin, %},",
+				"          {Kuukausipalkkaiset yht} = {2022 Kuukausipalkkaiset yhteens�},",
+				"          Kokoaikaiset = {2022 Kokoaikaisten lukum��r�},",
+				"          {Osa-aikaiset} = {2022 Osa-aikaisten lukum��r�},",
+				"          {S_Ansion keskiarvo, e/kk} = {2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk},",
+				"          {S_1desiili, e/kk} = {2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk},",
+				"          {S_Ansion mediaani, e/kk} = {2022 S��nn�llisen ty�ajan ansion mediaani, e/kk},",
+				"          {S_9desiili, e/kk} = {2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk},",
+				"          {S_Ansion variaatiokerroin, %} = {2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %},",
+				"          {Kokonaisansion keskiarvo, e/kk} = {2022 Kokonaisansion keskiarvo, e/kk},",
+				"          {Koko1desiili, e/kk} = {2022 Kokonaisansion 1.desiili, e/kk},",
+				"          {Kokonaisansion mediaani, e/kk} = {2022 Kokonaisansion mediaani, e/kk},",
+				"          {Koko9desiili, e/kk} = {2022 Kokonaisansion 9.desiili, e/kk},",
+				"          {Kokonaisansion variaatiokerroin, %} = {2022 Kokonaisansion variaatiokerroin, %}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> MapAllColumns",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ExportData"
+			]
+		}
+	}
+}

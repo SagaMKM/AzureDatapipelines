@@ -1,0 +1,89 @@
+{
+	"name": "CopyKunta",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CopyDataETLFromBlob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "kunnat2022cvs.csv",
+				"container": "rawdata"
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Ammattinimike",
+				"type": "String"
+			},
+			{
+				"name": "Sukupuoli",
+				"type": "String"
+			},
+			{
+				"name": "2022 Kuukausipalkkaiset yhteens�",
+				"type": "String"
+			},
+			{
+				"name": "2022 Kokoaikaisten lukum��r�",
+				"type": "String"
+			},
+			{
+				"name": "2022 Osa-aikaisten lukum��r�",
+				"type": "String"
+			},
+			{
+				"name": "2022 Peruspalkan keskiarvo, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "2022 S��nn�llisen ty�ajan ansion mediaani, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %",
+				"type": "String"
+			},
+			{
+				"name": "2022 Kokonaisansion keskiarvo, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "2022 Kokonaisansion 1.desiili, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "2022 Kokonaisansion mediaani, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "2022 Kokonaisansion 9.desiili, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "2022 Kokonaisansion variaatiokerroin, %",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "ETL_Trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/rawdata/blobs/",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/6b0bfc13-10cd-404c-ad16-714ae884c74b/resourceGroups/ETLresourcegroup/providers/Microsoft.Storage/storageAccounts/etlblobstorge",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"name": "etldatafactory-saga",
+	"location": "germanywestcentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e893d5ea-8ff3-4d80-9663-a8de2dcf82c0",
+		"tenantId": "fbd2f045-b34c-4673-9534-8f2374355cec"
+	}
+}
