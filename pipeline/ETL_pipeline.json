@@ -29,7 +29,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings",
+							"type": "AzureBlobStorageWriteSettings",
 							"maxConcurrentConnections": 3
 						},
 						"formatSettings": {
@@ -282,7 +282,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings",
+							"type": "AzureBlobStorageWriteSettings",
 							"maxConcurrentConnections": 3
 						},
 						"formatSettings": {
@@ -462,7 +462,7 @@
 					},
 					"enableLogging": true,
 					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
+						"type": "AzureBlobStorageReadSettings",
 						"recursive": true,
 						"enablePartitionDiscovery": false
 					}
@@ -501,7 +501,7 @@
 					},
 					"enableLogging": true,
 					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
+						"type": "AzureBlobStorageReadSettings",
 						"recursive": true,
 						"enablePartitionDiscovery": false
 					}

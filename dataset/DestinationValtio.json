@@ -2,15 +2,15 @@
 	"name": "DestinationValtio",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LinkedServiceETLtoDatalakeGen2",
+			"referenceName": "CopyDataETLFromBlob",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation",
-				"fileSystem": "stage"
+				"type": "AzureBlobStorageLocation",
+				"container": "stage"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
