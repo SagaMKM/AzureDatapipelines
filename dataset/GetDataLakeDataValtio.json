@@ -1,0 +1,128 @@
+{
+	"name": "GetDataLakeDataValtio",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorageforELT",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "valtio2022cvs.csv",
+				"fileSystem": "staging"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Vuosi",
+				"type": "String"
+			},
+			{
+				"name": "Ammattinimike",
+				"type": "String"
+			},
+			{
+				"name": "Sukupuoli",
+				"type": "String"
+			},
+			{
+				"name": "Palkansaajat yhteens�",
+				"type": "String"
+			},
+			{
+				"name": "Kokoaikaisten lukum��r�",
+				"type": "String"
+			},
+			{
+				"name": "Osa-aikaisten lukum��r�",
+				"type": "String"
+			},
+			{
+				"name": "S��nn�llisen ty�ajan ansion keskiarvo",
+				"type": "String"
+			},
+			{
+				"name": " e/kk7",
+				"type": "String"
+			},
+			{
+				"name": "S��nn�llisen ty�ajan ansion 1.desiili",
+				"type": "String"
+			},
+			{
+				"name": " e/kk9",
+				"type": "String"
+			},
+			{
+				"name": "S��nn�llisen ty�ajan ansion mediaani",
+				"type": "String"
+			},
+			{
+				"name": " e/kk11",
+				"type": "String"
+			},
+			{
+				"name": "S��nn�llisen ty�ajan ansion 9.desiili",
+				"type": "String"
+			},
+			{
+				"name": " e/kk13",
+				"type": "String"
+			},
+			{
+				"name": "S��nn�llisen ty�ajan ansion variaatiokerroin",
+				"type": "String"
+			},
+			{
+				"name": " %15",
+				"type": "String"
+			},
+			{
+				"name": "Kokonaisansion keskiarvo",
+				"type": "String"
+			},
+			{
+				"name": " e/kk17",
+				"type": "String"
+			},
+			{
+				"name": "Kokonaisansion 1.desiili",
+				"type": "String"
+			},
+			{
+				"name": " e/kk19",
+				"type": "String"
+			},
+			{
+				"name": "Kokonaisansion mediaani",
+				"type": "String"
+			},
+			{
+				"name": " e/kk21",
+				"type": "String"
+			},
+			{
+				"name": "Kokonaisansion 9.desiili",
+				"type": "String"
+			},
+			{
+				"name": " e/kk23",
+				"type": "String"
+			},
+			{
+				"name": "Kokonaisansion variaatiokerroin",
+				"type": "String"
+			},
+			{
+				"name": " %25",
+				"type": "String"
+			}
+		]
+	}
+}
