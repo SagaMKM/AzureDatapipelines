@@ -1,43 +1,69 @@
 {
-	"name": "dataflow1",
+	"name": "Load",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DataLakeDestinationKunnat",
+						"referenceName": "SourceKuntaCSV",
 						"type": "DatasetReference"
 					},
-					"name": "DataLakeKunnat"
+					"name": "SourceKuntienData"
 				},
 				{
 					"dataset": {
-						"referenceName": "DataLakeDestinationValtion",
+						"referenceName": "SourceValtioCSV",
 						"type": "DatasetReference"
 					},
-					"name": "DataLakeValtio"
+					"name": "SourceValtioData"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "TransformedData",
+						"referenceName": "DataLakeDestinationValtion",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
-				}
-			],
-			"transformations": [
-				{
-					"name": "union1"
+					"name": "LoadValtioDataToLake"
 				},
 				{
-					"name": "select1"
+					"dataset": {
+						"referenceName": "DataLakeDestinationKunnat",
+						"type": "DatasetReference"
+					},
+					"name": "LoadKuntaDataToLake"
 				}
 			],
+			"transformations": [],
 			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> SourceKuntienData",
 				"source(output(",
+				"          Vuosi as string,",
+				"          Ammattinimike as string,",
+				"          Sukupuoli as string,",
+				"          {Palkansaajat yhteens�} as string,",
+				"          {Kokoaikaisten lukum��r�} as string,",
+				"          {Osa-aikaisten lukum��r�} as string,",
+				"          {S��nn�llisen ty�ajan ansion keskiarvo, e/kk} as string,",
+				"          {S��nn�llisen ty�ajan ansion 1.desiili, e/kk} as string,",
+				"          {S��nn�llisen ty�ajan ansion mediaani, e/kk} as string,",
+				"          {S��nn�llisen ty�ajan ansion 9.desiili, e/kk} as string,",
+				"          {S��nn�llisen ty�ajan ansion variaatiokerroin, %} as string,",
+				"          {Kokonaisansion keskiarvo, e/kk} as string,",
+				"          {Kokonaisansion 1.desiili, e/kk} as string,",
+				"          {Kokonaisansion mediaani, e/kk} as string,",
+				"          {Kokonaisansion 9.desiili, e/kk} as string,",
+				"          {Kokonaisansion variaatiokerroin, %} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> SourceValtioData",
+				"SourceValtioData sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
 				"          Ammattinimike as string,",
 				"          Sukupuoli as string,",
 				"          {2022 Kuukausipalkkaiset yhteens�} as string,",
@@ -55,58 +81,36 @@
 				"          {2022 Kokonaisansion 9.desiili, e/kk} as string,",
 				"          {2022 Kokonaisansion variaatiokerroin, %} as string",
 				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> DataLakeKunnat",
-				"source(output(",
-				"          Ammattinimike as string,",
-				"          Sukupuoli as string,",
-				"          {2022 Kuukausipalkkaiset yhteens�} as string,",
-				"          {2022 Kokoaikaisten lukum��r�} as string,",
-				"          {2022 Osa-aikaisten lukum��r�} as string,",
-				"          {2022 Peruspalkan keskiarvo, e/kk} as string,",
-				"          {2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk} as string,",
-				"          {2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk} as string,",
-				"          {2022 S��nn�llisen ty�ajan ansion mediaani, e/kk} as string,",
-				"          {2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk} as string,",
-				"          {2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %} as string,",
-				"          {2022 Kokonaisansion keskiarvo, e/kk} as string,",
-				"          {2022 Kokonaisansion 1.desiili, e/kk} as string,",
-				"          {2022 Kokonaisansion mediaani, e/kk} as string,",
-				"          {2022 Kokonaisansion 9.desiili, e/kk} as string,",
-				"          {2022 Kokonaisansion variaatiokerroin, %} as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> DataLakeValtio",
-				"DataLakeKunnat, DataLakeValtio union(byName: true)~> union1",
-				"union1 select(mapColumn(",
-				"          Ammattinimike,",
-				"          Sukupuoli,",
-				"          {2022 Kuukausipalkkaiset yhteens�},",
-				"          {2022 Kokoaikaisten lukum��r�},",
-				"          {2022 Osa-aikaisten lukum��r�},",
-				"          {2022 Peruspalkan keskiarvo, e/kk},",
-				"          {2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk},",
-				"          {2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk},",
-				"          {2022 S��nn�llisen ty�ajan ansion mediaani, e/kk},",
-				"          {2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk},",
-				"          {2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %},",
-				"          {2022 Kokonaisansion keskiarvo, e/kk},",
-				"          {2022 Kokonaisansion 1.desiili, e/kk},",
-				"          {2022 Kokonaisansion mediaani, e/kk},",
-				"          {2022 Kokonaisansion 9.desiili, e/kk},",
-				"          {2022 Kokonaisansion variaatiokerroin, %}",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> LoadValtioDataToLake",
+				"SourceKuntienData sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Ammattinimike as string,",
+				"          Sukupuoli as string,",
+				"          {2022 Kuukausipalkkaiset yhteens�} as string,",
+				"          {2022 Kokoaikaisten lukum��r�} as string,",
+				"          {2022 Osa-aikaisten lukum��r�} as string,",
+				"          {2022 Peruspalkan keskiarvo, e/kk} as string,",
+				"          {2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk} as string,",
+				"          {2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk} as string,",
+				"          {2022 S��nn�llisen ty�ajan ansion mediaani, e/kk} as string,",
+				"          {2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk} as string,",
+				"          {2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %} as string,",
+				"          {2022 Kokonaisansion keskiarvo, e/kk} as string,",
+				"          {2022 Kokonaisansion 1.desiili, e/kk} as string,",
+				"          {2022 Kokonaisansion mediaani, e/kk} as string,",
+				"          {2022 Kokonaisansion 9.desiili, e/kk} as string,",
+				"          {2022 Kokonaisansion variaatiokerroin, %} as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> LoadKuntaDataToLake"
 			]
 		}
 	}
