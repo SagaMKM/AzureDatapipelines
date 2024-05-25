@@ -8,7 +8,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Wait",
+						"activity": "Wait60s",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -539,7 +539,7 @@
 				]
 			},
 			{
-				"name": "Wait",
+				"name": "Wait60s",
 				"type": "Wait",
 				"dependsOn": [
 					{
@@ -557,7 +557,63 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"waitTimeInSeconds": 120
+					"waitTimeInSeconds": 60
+				}
+			},
+			{
+				"name": "Fail1",
+				"type": "Fail",
+				"dependsOn": [
+					{
+						"activity": "Kunta",
+						"dependencyConditions": [
+							"Failed"
+						]
+					},
+					{
+						"activity": "Valtio",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"message": "Data Transfer to Data Lake failed",
+					"errorCode": "1221"
+				}
+			},
+			{
+				"name": "Wait30s",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "Data flow1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 30
+				}
+			},
+			{
+				"name": "Fail1_copy1",
+				"type": "Fail",
+				"dependsOn": [
+					{
+						"activity": "Data flow1",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"message": "Data Flow: Transformation Failed",
+					"errorCode": "1433"
 				}
 			}
 		],

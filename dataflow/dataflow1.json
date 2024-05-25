@@ -6,14 +6,14 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "GetDataLakeData",
+						"referenceName": "DataLakeKunta",
 						"type": "DatasetReference"
 					},
 					"name": "DataLakeKunnat"
 				},
 				{
 					"dataset": {
-						"referenceName": "GetDataLakeDataValtio",
+						"referenceName": "DataLakeValtio",
 						"type": "DatasetReference"
 					},
 					"name": "DataLakeValtio"
@@ -31,6 +31,15 @@
 			"transformations": [
 				{
 					"name": "union1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "sort1"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -97,8 +106,23 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> DataLakeValtio",
-				"DataLakeKunnat, DataLakeValtio union(byName: true)~> union1",
-				"union1 sink(allowSchemaDrift: true,",
+				"DataLakeValtio, DataLakeKunnat union(byName: true)~> union1",
+				"union1 select(mapColumn(",
+				"          Vuosi,",
+				"          Ammattinimike,",
+				"          Sukupuoli,",
+				"          Kokoaikaiset = {Kokoaikaisten lukum��r�},",
+				"          {Osa-aikaiset} = {Osa-aikaisten lukum��r�},",
+				"          {Osa-aikaiset} = {2022 Osa-aikaisten lukum��r�},",
+				"          Kokoaikaiset = {2022 Kokoaikaisten lukum��r�},",
+				"          {Kokonaisansion mediaani} = {2022 Kokonaisansion mediaani},",
+				"          {Kokonaisansion mediaani}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sort(asc(Ammattinimike, true)) ~> sort1",
+				"sort1 derive(Sukupuoli = iif(Sukupuoli == 'Yhteens�', 'Miehet ja Naiset Yhteensä', Sukupuoli)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     umask: 0022,",
 				"     preCommands: [],",

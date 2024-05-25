@@ -1,5 +1,5 @@
 {
-	"name": "DataLakeValtio",
+	"name": "DelimitedText1",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeStorageforELT",
