@@ -31,9 +31,6 @@
 			"transformations": [
 				{
 					"name": "union1"
-				},
-				{
-					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -44,27 +41,7 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> DataLakeValtio",
 				"DataLakeKunnat, DataLakeValtio union(byName: true)~> union1",
-				"union1 select(mapColumn(",
-				"          Ammattinimike,",
-				"          Sukupuoli,",
-				"          {2022 Kuukausipalkkaiset yhteens�},",
-				"          {2022 Kokoaikaisten lukum��r�},",
-				"          {2022 Osa-aikaisten lukum��r�},",
-				"          {2022 Peruspalkan keskiarvo, e/kk},",
-				"          {2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk},",
-				"          {2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk},",
-				"          {2022 S��nn�llisen ty�ajan ansion mediaani, e/kk},",
-				"          {2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk},",
-				"          {2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %},",
-				"          {2022 Kokonaisansion keskiarvo, e/kk},",
-				"          {2022 Kokonaisansion 1.desiili, e/kk},",
-				"          {2022 Kokonaisansion mediaani, e/kk},",
-				"          {2022 Kokonaisansion 9.desiili, e/kk},",
-				"          {2022 Kokonaisansion variaatiokerroin, %}",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
+				"union1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     umask: 0022,",
 				"     preCommands: [],",
