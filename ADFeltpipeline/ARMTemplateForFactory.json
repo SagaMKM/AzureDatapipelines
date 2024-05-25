@@ -507,7 +507,72 @@
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "Ammattinimike",
+						"type": "String"
+					},
+					{
+						"name": "Sukupuoli",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kuukausipalkkaiset yhteens�",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokoaikaisten lukum��r�",
+						"type": "String"
+					},
+					{
+						"name": "2022 Osa-aikaisten lukum��r�",
+						"type": "String"
+					},
+					{
+						"name": "2022 Peruspalkan keskiarvo, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion mediaani, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion keskiarvo, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion 1.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion mediaani, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion 9.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion variaatiokerroin, %",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
@@ -748,7 +813,25 @@
 					],
 					"transformations": [],
 					"scriptLines": [
-						"source(allowSchemaDrift: true,",
+						"source(output(",
+						"          Ammattinimike as string,",
+						"          Sukupuoli as string,",
+						"          {2022 Kuukausipalkkaiset yhteens�} as string,",
+						"          {2022 Kokoaikaisten lukum��r�} as string,",
+						"          {2022 Osa-aikaisten lukum��r�} as string,",
+						"          {2022 Peruspalkan keskiarvo, e/kk} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion mediaani, e/kk} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %} as string,",
+						"          {2022 Kokonaisansion keskiarvo, e/kk} as string,",
+						"          {2022 Kokonaisansion 1.desiili, e/kk} as string,",
+						"          {2022 Kokonaisansion mediaani, e/kk} as string,",
+						"          {2022 Kokonaisansion 9.desiili, e/kk} as string,",
+						"          {2022 Kokonaisansion variaatiokerroin, %} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> SourceKuntienData",
 						"source(output(",
@@ -792,6 +875,7 @@
 						"          {2022 Kokonaisansion 9.desiili, e/kk} as string,",
 						"          {2022 Kokonaisansion variaatiokerroin, %} as string",
 						"     ),",
+						"     filePattern:'valtiodata',",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -817,6 +901,7 @@
 						"          {2022 Kokonaisansion 9.desiili, e/kk} as string,",
 						"          {2022 Kokonaisansion variaatiokerroin, %} as string",
 						"     ),",
+						"     filePattern:'kunnallinendata',",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
