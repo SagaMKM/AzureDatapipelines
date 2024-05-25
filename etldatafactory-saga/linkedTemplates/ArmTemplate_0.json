@@ -1,0 +1,1142 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "etldatafactory-saga"
+		},
+		"AzureSqlDatabase1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
+		},
+		"CopyDataETLFromBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CopyDataETLFromBlob'"
+		},
+		"LinkedServiceETLtoDatalakeGen2_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LinkedServiceETLtoDatalakeGen2'"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "eltsqlserverfordatabase.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "master"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sagamkm"
+		},
+		"LinkedServiceETLtoDatalakeGen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://etldatalakegen2.dfs.core.windows.net/"
+		},
+		"ETL_Trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/6b0bfc13-10cd-404c-ad16-714ae884c74b/resourceGroups/ETLresourcegroup/providers/Microsoft.Storage/storageAccounts/etlblobstorge"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDatabase1_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"hostNameInCertificate": "",
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDatabase1_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyDataETLFromBlob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Tämä muodostaa yhteyden blob storageeen jossa lähdedata on.",
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('CopyDataETLFromBlob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LinkedServiceETLtoDatalakeGen2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Yhdistää data factoryn ja data laken gen 2",
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('LinkedServiceETLtoDatalakeGen2_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('LinkedServiceETLtoDatalakeGen2_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ETL_Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/rawdata/blobs/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('ETL_Trigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyKunta')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CopyDataETLFromBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "kunnat2022cvs.csv",
+						"container": "rawdata"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Ammattinimike",
+						"type": "String"
+					},
+					{
+						"name": "Sukupuoli",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kuukausipalkkaiset yhteens�",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokoaikaisten lukum��r�",
+						"type": "String"
+					},
+					{
+						"name": "2022 Osa-aikaisten lukum��r�",
+						"type": "String"
+					},
+					{
+						"name": "2022 Peruspalkan keskiarvo, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion mediaani, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion keskiarvo, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion 1.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion mediaani, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion 9.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "2022 Kokonaisansion variaatiokerroin, %",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CopyDataETLFromBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyValtio')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CopyDataETLFromBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "valtio2022cvs.csv",
+						"container": "rawdata"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Vuosi",
+						"type": "String"
+					},
+					{
+						"name": "Ammattinimike",
+						"type": "String"
+					},
+					{
+						"name": "Sukupuoli",
+						"type": "String"
+					},
+					{
+						"name": "Palkansaajat yhteens�",
+						"type": "String"
+					},
+					{
+						"name": "Kokoaikaisten lukum��r�",
+						"type": "String"
+					},
+					{
+						"name": "Osa-aikaisten lukum��r�",
+						"type": "String"
+					},
+					{
+						"name": "S��nn�llisen ty�ajan ansion keskiarvo, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "S��nn�llisen ty�ajan ansion 1.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "S��nn�llisen ty�ajan ansion mediaani, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "S��nn�llisen ty�ajan ansion 9.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "S��nn�llisen ty�ajan ansion variaatiokerroin, %",
+						"type": "String"
+					},
+					{
+						"name": "Kokonaisansion keskiarvo, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "Kokonaisansion 1.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "Kokonaisansion mediaani, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "Kokonaisansion 9.desiili, e/kk",
+						"type": "String"
+					},
+					{
+						"name": "Kokonaisansion variaatiokerroin, %",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CopyDataETLFromBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationKunta')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CopyDataETLFromBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "stage"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CopyDataETLFromBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationValtio')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CopyDataETLFromBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "stage"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CopyDataETLFromBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TransformedDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LinkedServiceETLtoDatalakeGen2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "processed"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LinkedServiceETLtoDatalakeGen2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TransformationFlow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CopyKunta",
+								"type": "DatasetReference"
+							},
+							"name": "Kunta"
+						},
+						{
+							"dataset": {
+								"referenceName": "CopyValtio",
+								"type": "DatasetReference"
+							},
+							"name": "Valtio"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "TransformedDataset",
+								"type": "DatasetReference"
+							},
+							"name": "ExportData"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "MapByFilteringColumns"
+						},
+						{
+							"name": "union1"
+						},
+						{
+							"name": "SortByAmmattinimike"
+						},
+						{
+							"name": "MapAllColumns"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Ammattinimike as string,",
+						"          Sukupuoli as string,",
+						"          {2022 Kuukausipalkkaiset yhteens�} as string,",
+						"          {2022 Kokoaikaisten lukum��r�} as string,",
+						"          {2022 Osa-aikaisten lukum��r�} as string,",
+						"          {2022 Peruspalkan keskiarvo, e/kk} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion mediaani, e/kk} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk} as string,",
+						"          {2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %} as string,",
+						"          {2022 Kokonaisansion keskiarvo, e/kk} as string,",
+						"          {2022 Kokonaisansion 1.desiili, e/kk} as string,",
+						"          {2022 Kokonaisansion mediaani, e/kk} as string,",
+						"          {2022 Kokonaisansion 9.desiili, e/kk} as string,",
+						"          {2022 Kokonaisansion variaatiokerroin, %} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Kunta",
+						"source(output(",
+						"          Vuosi as string,",
+						"          Ammattinimike as string,",
+						"          Sukupuoli as string,",
+						"          {Palkansaajat yhteens�} as string,",
+						"          {Kokoaikaisten lukum��r�} as string,",
+						"          {Osa-aikaisten lukum��r�} as string,",
+						"          {S��nn�llisen ty�ajan ansion keskiarvo, e/kk} as string,",
+						"          {S��nn�llisen ty�ajan ansion 1.desiili, e/kk} as string,",
+						"          {S��nn�llisen ty�ajan ansion mediaani, e/kk} as string,",
+						"          {S��nn�llisen ty�ajan ansion 9.desiili, e/kk} as string,",
+						"          {S��nn�llisen ty�ajan ansion variaatiokerroin, %} as string,",
+						"          {Kokonaisansion keskiarvo, e/kk} as string,",
+						"          {Kokonaisansion 1.desiili, e/kk} as string,",
+						"          {Kokonaisansion mediaani, e/kk} as string,",
+						"          {Kokonaisansion 9.desiili, e/kk} as string,",
+						"          {Kokonaisansion variaatiokerroin, %} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Valtio",
+						"MapByFilteringColumns derive(Sukupuoli = iif(Sukupuoli == 'yhteensä', 'miehet ja naiset', Sukupuoli)) ~> derivedColumn1",
+						"SortByAmmattinimike select(mapColumn(",
+						"          Vuosi,",
+						"          Ammattinimike,",
+						"          Sukupuoli,",
+						"          Kokoaikaiset,",
+						"          {Osa-aikaiset},",
+						"          {Kokonaisansion keskiarvo, e/kk},",
+						"          {Kokonaisansion mediaani, e/kk}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> MapByFilteringColumns",
+						"Valtio, Kunta union(byName: true)~> union1",
+						"MapAllColumns sort(asc(Ammattinimike, true)) ~> SortByAmmattinimike",
+						"union1 select(mapColumn(",
+						"          Vuosi,",
+						"          Ammattinimike,",
+						"          Sukupuoli,",
+						"          Kokoaikaiset = {Kokoaikaisten lukum��r�},",
+						"          {Osa-aikaiset} = {Osa-aikaisten lukum��r�},",
+						"          {S_Ansion keskiarvo, e/kk} = {S��nn�llisen ty�ajan ansion keskiarvo, e/kk},",
+						"          {S_1desiili, e/kk} = {S��nn�llisen ty�ajan ansion 1.desiili, e/kk},",
+						"          {S_Ansion mediaani, e/kk} = {S��nn�llisen ty�ajan ansion mediaani, e/kk},",
+						"          {S_9desiili, e/kk} = {S��nn�llisen ty�ajan ansion 9.desiili, e/kk},",
+						"          {S_Ansion variaatiokerroin, %} = {S��nn�llisen ty�ajan ansion variaatiokerroin, %},",
+						"          {Kokonaisansion keskiarvo, e/kk},",
+						"          {Koko1desiili, e/kk} = {Kokonaisansion 1.desiili, e/kk},",
+						"          {Kokonaisansion mediaani, e/kk},",
+						"          {Koko9desiili, e/kk} = {Kokonaisansion 9.desiili, e/kk},",
+						"          {Kokonaisansion variaatiokerroin, %},",
+						"          {Kuukausipalkkaiset yht} = {2022 Kuukausipalkkaiset yhteens�},",
+						"          Kokoaikaiset = {2022 Kokoaikaisten lukum��r�},",
+						"          {Osa-aikaiset} = {2022 Osa-aikaisten lukum��r�},",
+						"          {S_Ansion keskiarvo, e/kk} = {2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk},",
+						"          {S_1desiili, e/kk} = {2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk},",
+						"          {S_Ansion mediaani, e/kk} = {2022 S��nn�llisen ty�ajan ansion mediaani, e/kk},",
+						"          {S_9desiili, e/kk} = {2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk},",
+						"          {S_Ansion variaatiokerroin, %} = {2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %},",
+						"          {Kokonaisansion keskiarvo, e/kk} = {2022 Kokonaisansion keskiarvo, e/kk},",
+						"          {Koko1desiili, e/kk} = {2022 Kokonaisansion 1.desiili, e/kk},",
+						"          {Kokonaisansion mediaani, e/kk} = {2022 Kokonaisansion mediaani, e/kk},",
+						"          {Koko9desiili, e/kk} = {2022 Kokonaisansion 9.desiili, e/kk},",
+						"          {Kokonaisansion variaatiokerroin, %} = {2022 Kokonaisansion variaatiokerroin, %}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> MapAllColumns",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> ExportData"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CopyKunta')]",
+				"[concat(variables('factoryId'), '/datasets/CopyValtio')]",
+				"[concat(variables('factoryId'), '/datasets/TransformedDataset')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ETL_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Valtio Data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings",
+									"maxConcurrentConnections": 3
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Vuosi",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Vuosi",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Ammattinimike",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Ammattinimike",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Sukupuoli",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Sukupuoli",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Palkansaajat yhteens�",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Palkansaajat yhteens�",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Kokoaikaisten lukum��r�",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Kokoaikaisten lukum��r�",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Osa-aikaisten lukum��r�",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Osa-aikaisten lukum��r�",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "S��nn�llisen ty�ajan ansion keskiarvo, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "S��nn�llisen ty�ajan ansion keskiarvo, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "S��nn�llisen ty�ajan ansion 1.desiili, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "S��nn�llisen ty�ajan ansion 1.desiili, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "S��nn�llisen ty�ajan ansion mediaani, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "S��nn�llisen ty�ajan ansion mediaani, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "S��nn�llisen ty�ajan ansion 9.desiili, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "S��nn�llisen ty�ajan ansion 9.desiili, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "S��nn�llisen ty�ajan ansion variaatiokerroin, %",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "S��nn�llisen ty�ajan ansion variaatiokerroin, %",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Kokonaisansion keskiarvo, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Kokonaisansion keskiarvo, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Kokonaisansion 1.desiili, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Kokonaisansion 1.desiili, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Kokonaisansion mediaani, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Kokonaisansion mediaani, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Kokonaisansion 9.desiili, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Kokonaisansion 9.desiili, e/kk",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Kokonaisansion variaatiokerroin, %",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Kokonaisansion variaatiokerroin, %",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CopyValtio",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationValtio",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy Kunta Data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings",
+									"maxConcurrentConnections": 3
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CopyKunta",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationKunta",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Copy Valtio Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Copy Kunta Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "TransformationFlow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Kunta": {},
+									"Valtio": {},
+									"ExportData": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Delete Copy Kunta",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "CopyKunta",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "CopyDataETLFromBlob",
+									"type": "LinkedServiceReference"
+								},
+								"path": "deletedlogs"
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "Delete Copy Valtio",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "CopyValtio",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "CopyDataETLFromBlob",
+									"type": "LinkedServiceReference"
+								},
+								"path": "deletedlogs"
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "Delete Destination Kunta",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DestinationKunta",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "CopyDataETLFromBlob",
+									"type": "LinkedServiceReference"
+								},
+								"path": "deletedlogs"
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "Delete Destination Valtio",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DestinationValtio",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "CopyDataETLFromBlob",
+									"type": "LinkedServiceReference"
+								},
+								"path": "deletedlogs"
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "Fail1",
+						"type": "Fail",
+						"dependsOn": [
+							{
+								"activity": "Copy Valtio Data",
+								"dependencyConditions": [
+									"Failed"
+								]
+							},
+							{
+								"activity": "Copy Kunta Data",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"message": "Data Loading Failed",
+							"errorCode": "301"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-05-25T18:27:32Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CopyValtio')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationValtio')]",
+				"[concat(variables('factoryId'), '/datasets/CopyKunta')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationKunta')]",
+				"[concat(variables('factoryId'), '/dataflows/TransformationFlow')]",
+				"[concat(variables('factoryId'), '/linkedServices/CopyDataETLFromBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dataflow_Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [
+					"Dataflow Started"
+				],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "ETL_pipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 5,
+						"startTime": "2024-05-25T21:06:00",
+						"endTime": "2024-05-26T00:28:00",
+						"timeZone": "FLE Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ETL_pipeline')]"
+			]
+		}
+	]
+}

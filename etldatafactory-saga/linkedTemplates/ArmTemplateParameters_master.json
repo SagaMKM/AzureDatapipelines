@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "etldatafactory-saga"
+		},
+		"AzureSqlDatabase1_password": {
+			"value": ""
+		},
+		"CopyDataETLFromBlob_connectionString": {
+			"value": ""
+		},
+		"LinkedServiceETLtoDatalakeGen2_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "eltsqlserverfordatabase.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "master"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "sagamkm"
+		},
+		"LinkedServiceETLtoDatalakeGen2_properties_typeProperties_url": {
+			"value": "https://etldatalakegen2.dfs.core.windows.net/"
+		},
+		"ETL_Trigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/6b0bfc13-10cd-404c-ad16-714ae884c74b/resourceGroups/ETLresourcegroup/providers/Microsoft.Storage/storageAccounts/etlblobstorge"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
