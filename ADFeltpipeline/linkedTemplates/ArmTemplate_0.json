@@ -1675,7 +1675,7 @@
 						}
 					},
 					{
-						"name": "Fail1",
+						"name": "Fail Copy Data",
 						"type": "Fail",
 						"dependsOn": [
 							{
@@ -1714,7 +1714,7 @@
 						}
 					},
 					{
-						"name": "Fail1_copy1",
+						"name": "Fail Dataflow",
 						"type": "Fail",
 						"dependsOn": [
 							{
@@ -1729,6 +1729,84 @@
 							"message": "Data Flow: Transformation Failed",
 							"errorCode": "1433"
 						}
+					},
+					{
+						"name": "Delete DL Kunta",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Wait30s",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DataLakeKunta",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "AzureDataLakeStorageforELT",
+									"type": "LinkedServiceReference"
+								}
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "Delete DL Valtio",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Wait30s",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DataLakeValtio",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "AzureDataLakeStorageforELT",
+									"type": "LinkedServiceReference"
+								}
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
 					}
 				],
 				"policy": {
@@ -1742,7 +1820,8 @@
 				"[concat(variables('factoryId'), '/datasets/SourceValtioCSV')]",
 				"[concat(variables('factoryId'), '/datasets/DataLakeValtio')]",
 				"[concat(variables('factoryId'), '/datasets/SourceKuntaCSV')]",
-				"[concat(variables('factoryId'), '/datasets/DataLakeKunta')]"
+				"[concat(variables('factoryId'), '/datasets/DataLakeKunta')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorageforELT')]"
 			]
 		},
 		{
