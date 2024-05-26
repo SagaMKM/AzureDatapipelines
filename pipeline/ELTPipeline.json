@@ -640,6 +640,12 @@
 						"referenceName": "DataLakeKunta",
 						"type": "DatasetReference"
 					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "AzureDataLakeStorageforELT",
+							"type": "LinkedServiceReference"
+						}
+					},
 					"enableLogging": true,
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
@@ -671,6 +677,12 @@
 					"dataset": {
 						"referenceName": "DataLakeValtio",
 						"type": "DatasetReference"
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "AzureDataLakeStorageforELT",
+							"type": "LinkedServiceReference"
+						}
 					},
 					"enableLogging": true,
 					"storeSettings": {
