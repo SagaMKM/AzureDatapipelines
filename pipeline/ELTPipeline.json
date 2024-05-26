@@ -561,7 +561,7 @@
 				}
 			},
 			{
-				"name": "Fail1",
+				"name": "Fail Copy Data",
 				"type": "Fail",
 				"dependsOn": [
 					{
@@ -600,7 +600,7 @@
 				}
 			},
 			{
-				"name": "Fail1_copy1",
+				"name": "Fail Dataflow",
 				"type": "Fail",
 				"dependsOn": [
 					{
@@ -614,6 +614,70 @@
 				"typeProperties": {
 					"message": "Data Flow: Transformation Failed",
 					"errorCode": "1433"
+				}
+			},
+			{
+				"name": "Delete DL Kunta",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Wait30s",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DataLakeKunta",
+						"type": "DatasetReference"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Delete DL Valtio",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Wait30s",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DataLakeValtio",
+						"type": "DatasetReference"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
 				}
 			}
 		],
