@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "kunnat2022cvs.csv",
+				"fileName": "kunnat2022cvs.txt",
 				"fileSystem": "staging"
 			},
 			"columnDelimiter": ";",
@@ -40,91 +40,47 @@
 				"type": "String"
 			},
 			{
-				"name": "2022 Peruspalkan keskiarvo",
+				"name": "2022 Peruspalkan keskiarvo, e/kk",
 				"type": "String"
 			},
 			{
-				"name": " e/kk6",
+				"name": "2022 S��nn�llisen ty�ajan ansion keskiarvo, e/kk",
 				"type": "String"
 			},
 			{
-				"name": "2022 S��nn�llisen ty�ajan ansion keskiarvo",
+				"name": "2022 S��nn�llisen ty�ajan ansion 1.desiili, e/kk",
 				"type": "String"
 			},
 			{
-				"name": " e/kk8",
+				"name": "2022 S��nn�llisen ty�ajan ansion mediaani, e/kk",
 				"type": "String"
 			},
 			{
-				"name": "2022 S��nn�llisen ty�ajan ansion 1.desiili",
+				"name": "2022 S��nn�llisen ty�ajan ansion 9.desiili, e/kk",
 				"type": "String"
 			},
 			{
-				"name": " e/kk10",
+				"name": "2022 S��nn�llisen ty�ajan ansion variaatiokerroin, %",
 				"type": "String"
 			},
 			{
-				"name": "2022 S��nn�llisen ty�ajan ansion mediaani",
+				"name": "2022 Kokonaisansion keskiarvo, e/kk",
 				"type": "String"
 			},
 			{
-				"name": " e/kk12",
+				"name": "2022 Kokonaisansion 1.desiili, e/kk",
 				"type": "String"
 			},
 			{
-				"name": "2022 S��nn�llisen ty�ajan ansion 9.desiili",
+				"name": "2022 Kokonaisansion mediaani, e/kk",
 				"type": "String"
 			},
 			{
-				"name": " e/kk14",
+				"name": "2022 Kokonaisansion 9.desiili, e/kk",
 				"type": "String"
 			},
 			{
-				"name": "2022 S��nn�llisen ty�ajan ansion variaatiokerroin",
-				"type": "String"
-			},
-			{
-				"name": " %16",
-				"type": "String"
-			},
-			{
-				"name": "2022 Kokonaisansion keskiarvo",
-				"type": "String"
-			},
-			{
-				"name": " e/kk18",
-				"type": "String"
-			},
-			{
-				"name": "2022 Kokonaisansion 1.desiili",
-				"type": "String"
-			},
-			{
-				"name": " e/kk20",
-				"type": "String"
-			},
-			{
-				"name": "2022 Kokonaisansion mediaani",
-				"type": "String"
-			},
-			{
-				"name": " e/kk22",
-				"type": "String"
-			},
-			{
-				"name": "2022 Kokonaisansion 9.desiili",
-				"type": "String"
-			},
-			{
-				"name": " e/kk24",
-				"type": "String"
-			},
-			{
-				"name": "2022 Kokonaisansion variaatiokerroin",
-				"type": "String"
-			},
-			{
-				"name": " %26",
+				"name": "2022 Kokonaisansion variaatiokerroin, %",
 				"type": "String"
 			}
 		]
