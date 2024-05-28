@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "valtio2022cvs.csv",
 				"fileSystem": "staging"
 			},
 			"columnDelimiter": ";",
@@ -17,6 +18,71 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": []
+		"schema": [
+			{
+				"name": "Vuosi",
+				"type": "String"
+			},
+			{
+				"name": "Ammattinimike",
+				"type": "String"
+			},
+			{
+				"name": "Sukupuoli",
+				"type": "String"
+			},
+			{
+				"name": "Palkansaajat yhteens�",
+				"type": "String"
+			},
+			{
+				"name": "Kokoaikaisten lukum��r�",
+				"type": "String"
+			},
+			{
+				"name": "Osa-aikaisten lukum��r�",
+				"type": "String"
+			},
+			{
+				"name": "S��nn�llisen ty�ajan ansion keskiarvo, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "S��nn�llisen ty�ajan ansion 1.desiili, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "S��nn�llisen ty�ajan ansion mediaani, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "S��nn�llisen ty�ajan ansion 9.desiili, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "S��nn�llisen ty�ajan ansion variaatiokerroin, %",
+				"type": "String"
+			},
+			{
+				"name": "Kokonaisansion keskiarvo, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "Kokonaisansion 1.desiili, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "Kokonaisansion mediaani, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "Kokonaisansion 9.desiili, e/kk",
+				"type": "String"
+			},
+			{
+				"name": "Kokonaisansion variaatiokerroin, %",
+				"type": "String"
+			}
+		]
 	}
 }

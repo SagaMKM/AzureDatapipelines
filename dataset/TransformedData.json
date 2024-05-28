@@ -17,6 +17,27 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": []
+		"schema": [
+			{
+				"name": "Ammattinimike",
+				"type": "String"
+			},
+			{
+				"name": "Sukupuoli",
+				"type": "String"
+			},
+			{
+				"name": "Kokoaikaiset",
+				"type": "String"
+			},
+			{
+				"name": "Osa-aikaiset",
+				"type": "String"
+			},
+			{
+				"name": "Kokonaisansion mediaani",
+				"type": "String"
+			}
+		]
 	}
 }
