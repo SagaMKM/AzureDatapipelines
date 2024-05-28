@@ -88,7 +88,7 @@
 						"fileName": "kunnat2022cvs.csv",
 						"fileSystem": "staging"
 					},
-					"columnDelimiter": ",",
+					"columnDelimiter": ";",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
@@ -225,7 +225,7 @@
 						"fileName": "valtio2022cvs.csv",
 						"fileSystem": "staging"
 					},
-					"columnDelimiter": ",",
+					"columnDelimiter": ";",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
@@ -358,7 +358,7 @@
 						"fileName": "valtio2022cvs.csv",
 						"fileSystem": "staging"
 					},
-					"columnDelimiter": ",",
+					"columnDelimiter": ";",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
@@ -946,7 +946,7 @@
 						"type": "AzureBlobFSLocation",
 						"fileSystem": "processed"
 					},
-					"columnDelimiter": ",",
+					"columnDelimiter": ";",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
@@ -997,7 +997,7 @@
 							"name": "select1"
 						},
 						{
-							"name": "sort1"
+							"name": "SortByAmmattinimike"
 						},
 						{
 							"name": "derivedColumn1"
@@ -1069,7 +1069,6 @@
 						"     ignoreNoFilesFound: false) ~> DataLakeValtio",
 						"DataLakeValtio, DataLakeKunnat union(byName: true)~> union1",
 						"union1 select(mapColumn(",
-						"          Vuosi,",
 						"          Ammattinimike,",
 						"          Sukupuoli,",
 						"          Kokoaikaiset = {Kokoaikaisten lukum��r�},",
@@ -1081,8 +1080,8 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 sort(asc(Ammattinimike, true)) ~> sort1",
-						"sort1 derive(Sukupuoli = iif(Sukupuoli == 'Yhteens�', 'Miehet ja Naiset Yhteensä', Sukupuoli)) ~> derivedColumn1",
+						"select1 sort(asc(Ammattinimike, true)) ~> SortByAmmattinimike",
+						"SortByAmmattinimike derive(Sukupuoli = iif(Sukupuoli == 'Yhteens�', 'Miehet ja Naiset Yhteensä', Sukupuoli)) ~> derivedColumn1",
 						"derivedColumn1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     umask: 0022,",
